@@ -1,4 +1,5 @@
-const users = require('../Models/userSchema')
+
+const user = require('../Models/userSchema')
 const jwt = require("jsonwebtoken")
 
 exports.register = async (req, res) => {
@@ -8,14 +9,14 @@ exports.register = async (req, res) => {
     console.log(email);
     console.log(password);
     try {
-        const existingUser = await users.findOne({ email: email });
+        const existingUser = await user.findOne({ email: email });
         console.log("Existing user");
         console.log(existingUser);
         if (existingUser) {
             res.status(406).json('Account already exist, please login')
         }
         else {
-            const newUser = new users({
+            const newUser = new user({
                 username: username,
                 email: email,
                 password: password,
@@ -38,7 +39,7 @@ exports.login = async (req, res) => {
     console.log(email);
     console.log(password);
     try {
-        const existingUser = await users.findOne({ email: email, password: password })
+        const existingUser = await user.findOne({ email: email, password: password })
         if (existingUser) {
             const token = jwt.sign({ userId: existingUser._id }, 'supersecretkey12345')
             console.log(token);
@@ -51,6 +52,6 @@ exports.login = async (req, res) => {
             res.status(406).json("Invalid email id or password")
         }
     } catch (err) {
-        res.status(401).json("Login request failed due to", err)
-    }
+        res.status(401).json("Login request failed due to", err)
+    }
 }
